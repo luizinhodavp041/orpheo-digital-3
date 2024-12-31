@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -36,6 +38,7 @@ const testimonials = [
 export default function TestimonialsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [animationKey, setAnimationKey] = useState(0);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -60,6 +63,7 @@ export default function TestimonialsSection() {
   };
 
   const paginate = (newDirection: number) => {
+    setAnimationKey((prev) => prev + 1);
     setDirection(newDirection);
     setCurrentIndex((prevIndex) =>
       prevIndex + newDirection < 0
@@ -72,7 +76,7 @@ export default function TestimonialsSection() {
 
   return (
     <section className="py-24 bg-background relative overflow-hidden">
-      <FireworkAnimation trigger={currentIndex} />
+      <FireworkAnimation trigger={animationKey} />
       {/* Background com gradiente sutil */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background-secondary/20 to-background" />
@@ -137,6 +141,11 @@ export default function TestimonialsSection() {
                     {testimonials[currentIndex].content}
                   </p>
                   <div className="flex items-center gap-4">
+                    <img
+                      src={testimonials[currentIndex].image}
+                      alt={testimonials[currentIndex].author}
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
                     <div>
                       <h4 className="font-medium text-text">
                         {testimonials[currentIndex].author}

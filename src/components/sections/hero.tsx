@@ -1,11 +1,20 @@
 "use client";
 
-import React, { useState, type MouseEvent } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import VideoBackground from "./video-background";
 
-const HeroSection = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
+const HeroSection: React.FC = () => {
+  const [mousePosition, setMousePosition] = useState<MousePosition>({
+    x: 0,
+    y: 0,
+  });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     setMousePosition({
@@ -19,9 +28,16 @@ const HeroSection = () => {
       className="min-h-screen w-full bg-background relative overflow-hidden"
       onMouseMove={handleMouseMove}
     >
+      {/* Video Background */}
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-background/90 z-10" />{" "}
+        {/* Overlay escuro */}
+        <VideoBackground />
+      </div>
+
       {/* Gradiente Interativo */}
       <div
-        className="absolute inset-0 opacity-20 z-10"
+        className="absolute inset-0 opacity-20 z-20"
         style={{
           background: `radial-gradient(circle at ${mousePosition.x * 100}% ${
             mousePosition.y * 100
@@ -30,7 +46,7 @@ const HeroSection = () => {
         }}
       />
 
-      <div className="container mx-auto h-screen flex items-center">
+      <div className="container mx-auto h-screen flex items-center relative z-30">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           {/* Conteúdo */}
           <motion.div

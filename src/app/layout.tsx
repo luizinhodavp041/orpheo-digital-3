@@ -1,9 +1,10 @@
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-export const metadata = {
-  title: "Landing Page",
-  description: "Uma landing page moderna e profissional",
-};
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -11,8 +12,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="pt">
-      <body>{children}</body>
+    <html lang="en">
+      <body
+        className={`${inter.className} bg-background text-text min-h-screen`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

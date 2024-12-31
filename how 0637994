@@ -1,0 +1,24 @@
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{0}: checkout: moving from recovery_branch to new_branch
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{1}: checkout: moving from 0c9ac10ba11b4aebffa9b1d6a5d022be3542995b to recovery_branch
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{2}: checkout: moving from master to 0c9ac10
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{3}: checkout: moving from backup-branch to master
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{4}: checkout: moving from recovery-branch to backup-branch
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{5}: checkout: moving from master to recovery-branch
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{6}: checkout: moving from master to master
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{7}: checkout: moving from 063799434f6e154445faf0efd4782e5b9ef74367 to master
+[33m0637994[m HEAD@{8}: commit: hero 2
+[33mb355be9[m HEAD@{9}: commit: header
+[33m010480a[m HEAD@{10}: commit: ícones showcase
+[33m1ec635f[m HEAD@{11}: commit: fogos
+[33m7c076d0[m HEAD@{12}: commit: removido imagem testimonials
+[33m9bc125a[m HEAD@{13}: commit: testimonials
+[33mfcb45e9[m HEAD@{14}: commit: footer
+[33m98c8432[m HEAD@{15}: commit: cta
+[33md2453c9[m HEAD@{16}: commit: showcase
+[33m38fad96[m HEAD@{17}: commit: features
+[33mde32f9d[m HEAD@{18}: commit: hero
+[33mdfaebff[m HEAD@{19}: commit: estrutura de pastas - 2
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{20}: checkout: moving from master to 0c9ac10
+[33m0c9ac10[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mnew_branch[m[33m, [m[1;31morigin/master[m[33m, [m[1;32mrecovery_branch[m[33m, [m[1;32mrecovery-branch[m[33m, [m[1;32mmaster[m[33m, [m[1;32mbackup-branch[m[33m)[m HEAD@{21}: commit: componentes shadcnui
+[33m1f0a352[m HEAD@{22}: commit: estrutura de pastas
+[33ma073ce3[m HEAD@{23}: commit (initial): next.js + shadcnui

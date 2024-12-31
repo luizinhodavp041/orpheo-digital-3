@@ -141,11 +141,6 @@ export default function TestimonialsSection() {
                     {testimonials[currentIndex].content}
                   </p>
                   <div className="flex items-center gap-4">
-                    <img
-                      src={testimonials[currentIndex].image}
-                      alt={testimonials[currentIndex].author}
-                      className="w-12 h-12 rounded-full object-cover"
-                    />
                     <div>
                       <h4 className="font-medium text-text">
                         {testimonials[currentIndex].author}

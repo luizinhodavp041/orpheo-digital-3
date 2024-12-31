@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import FireworkAnimation from "./firework-animation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, Quote } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -71,6 +72,7 @@ export default function TestimonialsSection() {
 
   return (
     <section className="py-24 bg-background relative overflow-hidden">
+      <FireworkAnimation trigger={currentIndex} />
       {/* Background com gradiente sutil */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-background via-background-secondary/20 to-background" />

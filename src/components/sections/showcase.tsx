@@ -2,13 +2,14 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { Code2, Laptop, LineChart, ArrowUpRight } from "lucide-react";
 
 interface Project {
   title: string;
   description: string;
   tags: string[];
-  imageUrl: string;
+  icon: React.ElementType;
+  bgColor: string;
   link: string;
 }
 
@@ -18,7 +19,8 @@ const projects: Project[] = [
     description:
       "Design moderno e responsivo para uma plataforma empresarial de última geração.",
     tags: ["Next.js", "React", "TypeScript"],
-    imageUrl: "/api/placeholder/600/400",
+    icon: Laptop,
+    bgColor: "from-accent/20 to-accent/5",
     link: "#",
   },
   {
@@ -26,7 +28,8 @@ const projects: Project[] = [
     description:
       "Interface elegante e minimalista para uma experiência de compra única.",
     tags: ["Tailwind", "Node.js", "PostgreSQL"],
-    imageUrl: "/api/placeholder/600/400",
+    icon: Code2,
+    bgColor: "from-accent/30 to-accent/10",
     link: "#",
   },
   {
@@ -34,12 +37,15 @@ const projects: Project[] = [
     description:
       "Painel administrativo com análises em tempo real e visualizações interativas.",
     tags: ["React", "TypeScript", "AWS"],
-    imageUrl: "/api/placeholder/600/400",
+    icon: LineChart,
+    bgColor: "from-accent/25 to-accent/5",
     link: "#",
   },
 ];
 
 const ProjectCard = ({ project }: { project: Project }) => {
+  const Icon = project.icon;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -49,17 +55,45 @@ const ProjectCard = ({ project }: { project: Project }) => {
       className="group relative"
     >
       <div className="overflow-hidden rounded-lg bg-background-secondary border border-border group-hover:border-accent/20 transition-colors">
-        {/* Imagem com overlay no hover */}
-        <div className="relative">
-          <img
-            src={project.imageUrl}
-            alt={project.title}
-            className="w-full aspect-[4/3] object-cover transform group-hover:scale-105 transition-transform duration-500"
+        {/* Área do Ícone com gradiente */}
+        <div className="relative h-64 bg-gradient-to-br flex items-center justify-center overflow-hidden">
+          {/* Background gradient */}
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${project.bgColor} opacity-20 group-hover:opacity-30 transition-opacity duration-500`}
           />
-          <div className="absolute inset-0 bg-background/80 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-            <div className="translate-y-4 group-hover:translate-y-0 transition-transform">
-              <ArrowUpRight className="w-8 h-8 text-accent" />
-            </div>
+
+          {/* Ícone principal */}
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="relative z-10"
+          >
+            <Icon
+              className="w-24 h-24 text-accent group-hover:text-accent transition-colors duration-300"
+              strokeWidth={1.2}
+            />
+          </motion.div>
+
+          {/* Ícone hover */}
+          <motion.div className="absolute right-4 top-4 opacity-0 group-hover:opacity-100 transition-opacity">
+            <ArrowUpRight className="w-6 h-6 text-accent" />
+          </motion.div>
+
+          {/* Padrão de pontos decorativo */}
+          <div className="absolute inset-0 grid grid-cols-6 gap-4 p-4 opacity-20">
+            {[...Array(24)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="w-1 h-1 bg-accent rounded-full"
+                initial={{ opacity: 0.2 }}
+                animate={{ opacity: [0.2, 0.5, 0.2] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  delay: i * 0.1,
+                }}
+              />
+            ))}
           </div>
         </div>
 

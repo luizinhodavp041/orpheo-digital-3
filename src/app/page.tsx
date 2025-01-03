@@ -6,6 +6,7 @@ import FeaturesSection from "@/components/sections/features";
 import ShowcaseSection from "@/components/sections/showcase";
 import TestimonialsSection from "@/components/sections/testimonials";
 import CTASection from "@/components/sections/cta";
+import ServicesSection from "@/components/sections/services";
 import Footer from "@/components/layout/footer";
 
 export default function Home() {
@@ -13,8 +14,9 @@ export default function Home() {
     <main className="min-h-screen">
       <Header />
       <HeroSection />
-      <FeaturesSection />
-      <ShowcaseSection />
+      {/* <FeaturesSection /> */}
+      <ServicesSection />
+      {/* <ShowcaseSection /> */}
       <TestimonialsSection />
       <CTASection />
       <Footer />

@@ -16,7 +16,6 @@ import {
 interface Service {
   title: string;
   description: string;
-  // tags: string[];
   icon: React.ElementType;
   bgColor: string;
 }
@@ -28,7 +27,6 @@ const services: Service[] = [
       "Planejamento detalhado e organização temporal dos seus projetos para máxima eficiência.",
     icon: Calendar,
     bgColor: "from-accent/20 to-accent/5",
-    // tags: ["Planejamento", "Organização", "Estratégia"],
   },
   {
     title: "Gestão de tráfego",
@@ -36,7 +34,6 @@ const services: Service[] = [
       "Otimização e direcionamento eficiente do tráfego digital para maximizar resultados.",
     icon: LineChart,
     bgColor: "from-accent/30 to-accent/10",
-    // tags: ["Marketing", "Analytics", "Otimização"],
   },
   {
     title: "Redes sociais",
@@ -44,7 +41,6 @@ const services: Service[] = [
       "Gestão completa da sua presença nas redes sociais com estratégias personalizadas.",
     icon: Share2,
     bgColor: "from-accent/25 to-accent/5",
-    // tags: ["Social Media", "Conteúdo", "Engajamento"],
   },
   {
     title: "Presença online",
@@ -52,7 +48,6 @@ const services: Service[] = [
       "Estratégias para fortalecer sua marca no ambiente digital de forma consistente.",
     icon: Globe,
     bgColor: "from-accent/20 to-accent/5",
-    // tags: ["Branding", "SEO", "Digital"],
   },
   {
     title: "Desenvolvimento",
@@ -60,7 +55,6 @@ const services: Service[] = [
       "Soluções tecnológicas personalizadas com foco em performance e usabilidade.",
     icon: Code2,
     bgColor: "from-accent/30 to-accent/10",
-    // tags: ["Web", "Mobile", "Apps"],
   },
   {
     title: "Design & Branding",
@@ -68,7 +62,6 @@ const services: Service[] = [
       "Criação e evolução da identidade visual para fortalecer sua marca.",
     icon: Paintbrush,
     bgColor: "from-accent/25 to-accent/5",
-    // tags: ["UI/UX", "Marca", "Visual"],
   },
   {
     title: "Automação",
@@ -76,7 +69,6 @@ const services: Service[] = [
       "Otimização e automatização de processos empresariais para maior produtividade.",
     icon: Cog,
     bgColor: "from-accent/20 to-accent/5",
-    // tags: ["Processos", "Eficiência", "Software"],
   },
 ];
 
@@ -128,21 +120,19 @@ const ServiceCard = ({ service }: { service: Service }) => {
             {service.title}
           </h3>
           <p className="text-text-secondary">{service.description}</p>
-          <div className="flex flex-wrap gap-2"></div>
         </div>
       </div>
     </div>
   );
 };
 
-export default function ServicesSection() {
+const ServicesSection: React.FC = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
   const containerRef = React.useRef<HTMLDivElement>(null);
 
-  // Duplica os serviços o suficiente para garantir uma animação suave
   const duplicatedServices = [
     ...services,
     ...services,
@@ -150,30 +140,46 @@ export default function ServicesSection() {
     ...services,
   ];
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleDragStart = (clientX: number) => {
     if (!containerRef.current) return;
     setIsDragging(true);
-    setStartX(e.pageX - containerRef.current.offsetLeft);
+    setStartX(clientX - containerRef.current.offsetLeft);
     setScrollLeft(containerRef.current.scrollLeft);
-    containerRef.current.style.cursor = "grabbing";
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleDragMove = (clientX: number) => {
     if (!isDragging || !containerRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const distance = (x - startX) * 1;
+    const x = clientX - containerRef.current.offsetLeft;
+    const distance = (x - startX) * 0.5;
     containerRef.current.scrollLeft = scrollLeft - distance;
   };
 
-  const handleMouseUp = () => {
+  const handleDragEnd = () => {
     setIsDragging(false);
     if (containerRef.current) {
       containerRef.current.style.cursor = "grab";
     }
   };
 
-  // Reseta a posição do scroll quando chega ao final
+  const handleMouseDown = (e: React.MouseEvent) => {
+    containerRef.current?.style.setProperty("cursor", "grabbing");
+    handleDragStart(e.pageX);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleDragMove(e.pageX);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    handleDragStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault();
+    handleDragMove(e.touches[0].clientX);
+  };
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -221,12 +227,15 @@ export default function ServicesSection() {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => {
             setIsHovered(false);
-            handleMouseUp();
+            handleDragEnd();
           }}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          className="relative overflow-hidden cursor-grab"
+          onMouseUp={handleDragEnd}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleDragEnd}
+          className="relative overflow-hidden cursor-grab touch-pan-x"
         >
           <div
             className={`flex gap-6 px-3 ${!isDragging && "infinite-scroll"}`}
@@ -262,4 +271,6 @@ export default function ServicesSection() {
       `}</style>
     </section>
   );
-}
+};
+
+export default ServicesSection;

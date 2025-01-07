@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -16,7 +16,7 @@ import {
 interface Service {
   title: string;
   description: string;
-  tags: string[];
+  // tags: string[];
   icon: React.ElementType;
   bgColor: string;
 }
@@ -28,7 +28,7 @@ const services: Service[] = [
       "Planejamento detalhado e organização temporal dos seus projetos para máxima eficiência.",
     icon: Calendar,
     bgColor: "from-accent/20 to-accent/5",
-    tags: ["Planejamento", "Organização", "Estratégia"],
+    // tags: ["Planejamento", "Organização", "Estratégia"],
   },
   {
     title: "Gestão de tráfego",
@@ -36,7 +36,7 @@ const services: Service[] = [
       "Otimização e direcionamento eficiente do tráfego digital para maximizar resultados.",
     icon: LineChart,
     bgColor: "from-accent/30 to-accent/10",
-    tags: ["Marketing", "Analytics", "Otimização"],
+    // tags: ["Marketing", "Analytics", "Otimização"],
   },
   {
     title: "Redes sociais",
@@ -44,7 +44,7 @@ const services: Service[] = [
       "Gestão completa da sua presença nas redes sociais com estratégias personalizadas.",
     icon: Share2,
     bgColor: "from-accent/25 to-accent/5",
-    tags: ["Social Media", "Conteúdo", "Engajamento"],
+    // tags: ["Social Media", "Conteúdo", "Engajamento"],
   },
   {
     title: "Presença online",
@@ -52,7 +52,7 @@ const services: Service[] = [
       "Estratégias para fortalecer sua marca no ambiente digital de forma consistente.",
     icon: Globe,
     bgColor: "from-accent/20 to-accent/5",
-    tags: ["Branding", "SEO", "Digital"],
+    // tags: ["Branding", "SEO", "Digital"],
   },
   {
     title: "Desenvolvimento",
@@ -60,7 +60,7 @@ const services: Service[] = [
       "Soluções tecnológicas personalizadas com foco em performance e usabilidade.",
     icon: Code2,
     bgColor: "from-accent/30 to-accent/10",
-    tags: ["Web", "Mobile", "Apps"],
+    // tags: ["Web", "Mobile", "Apps"],
   },
   {
     title: "Design & Branding",
@@ -68,7 +68,7 @@ const services: Service[] = [
       "Criação e evolução da identidade visual para fortalecer sua marca.",
     icon: Paintbrush,
     bgColor: "from-accent/25 to-accent/5",
-    tags: ["UI/UX", "Marca", "Visual"],
+    // tags: ["UI/UX", "Marca", "Visual"],
   },
   {
     title: "Automação",
@@ -76,7 +76,7 @@ const services: Service[] = [
       "Otimização e automatização de processos empresariais para maior produtividade.",
     icon: Cog,
     bgColor: "from-accent/20 to-accent/5",
-    tags: ["Processos", "Eficiência", "Software"],
+    // tags: ["Processos", "Eficiência", "Software"],
   },
 ];
 
@@ -128,16 +128,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
             {service.title}
           </h3>
           <p className="text-text-secondary">{service.description}</p>
-          <div className="flex flex-wrap gap-2">
-            {service.tags.map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-accent/10 text-accent rounded-full text-sm"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <div className="flex flex-wrap gap-2"></div>
         </div>
       </div>
     </div>
@@ -146,6 +137,10 @@ const ServiceCard = ({ service }: { service: Service }) => {
 
 export default function ServicesSection() {
   const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   // Duplica os serviços o suficiente para garantir uma animação suave
   const duplicatedServices = [
@@ -154,6 +149,47 @@ export default function ServicesSection() {
     ...services,
     ...services,
   ];
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - containerRef.current.offsetLeft);
+    setScrollLeft(containerRef.current.scrollLeft);
+    containerRef.current.style.cursor = "grabbing";
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !containerRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - containerRef.current.offsetLeft;
+    const distance = (x - startX) * 2;
+    containerRef.current.scrollLeft = scrollLeft - distance;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    if (containerRef.current) {
+      containerRef.current.style.cursor = "grab";
+    }
+  };
+
+  // Reseta a posição do scroll quando chega ao final
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      if (container.scrollLeft >= maxScroll * 0.75) {
+        container.scrollLeft = maxScroll * 0.25;
+      } else if (container.scrollLeft <= maxScroll * 0.25) {
+        container.scrollLeft = maxScroll * 0.75;
+      }
+    };
+
+    container.addEventListener("scroll", handleScroll);
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <section className="py-24 bg-background relative overflow-hidden">
@@ -181,14 +217,22 @@ export default function ServicesSection() {
         </div>
 
         <div
+          ref={containerRef}
           onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          className="relative overflow-hidden"
+          onMouseLeave={() => {
+            setIsHovered(false);
+            handleMouseUp();
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          className="relative overflow-hidden cursor-grab"
         >
           <div
-            className={`flex gap-6 px-3 infinite-scroll`}
+            className={`flex gap-6 px-3 ${!isDragging && "infinite-scroll"}`}
             style={{
-              animationPlayState: isHovered ? "paused" : "running",
+              animationPlayState:
+                isHovered || isDragging ? "paused" : "running",
             }}
           >
             {duplicatedServices.map((service, index) => (
@@ -204,6 +248,7 @@ export default function ServicesSection() {
       <style jsx global>{`
         .infinite-scroll {
           animation: scroll 30s linear infinite;
+          user-select: none;
         }
 
         @keyframes scroll {
@@ -213,10 +258,6 @@ export default function ServicesSection() {
           100% {
             transform: translateX(-50%);
           }
-        }
-
-        .pause-animation {
-          animation-play-state: paused;
         }
       `}</style>
     </section>

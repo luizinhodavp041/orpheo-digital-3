@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -145,57 +145,15 @@ const ServiceCard = ({ service }: { service: Service }) => {
 };
 
 export default function ServicesSection() {
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
-  const scrollRef = React.useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Duplica os serviços para criar um efeito infinito
-  const duplicatedServices = [...services, ...services];
-
-  // Animação automática
-  useEffect(() => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer || isHovered || isDragging) return;
-
-    const scroll = () => {
-      if (scrollContainer) {
-        scrollContainer.scrollLeft += 2; // Aumentei a velocidade de rolagem de 1 para 2
-
-        // Reset scroll position quando chegar ao final
-        if (
-          scrollContainer.scrollLeft >=
-          (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2
-        ) {
-          scrollContainer.scrollLeft = 0;
-        }
-      }
-    };
-
-    const intervalId = setInterval(scroll, 20); // Diminui o intervalo de 30ms para 20ms
-
-    return () => clearInterval(intervalId);
-  }, [isHovered, isDragging]);
-
-  // Handlers para drag manual
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setStartX(e.pageX - scrollRef.current!.offsetLeft);
-    setScrollLeft(scrollRef.current!.scrollLeft);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - scrollRef.current!.offsetLeft;
-    const walk = (x - startX) * 2;
-    scrollRef.current!.scrollLeft = scrollLeft - walk;
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+  // Duplica os serviços o suficiente para garantir uma animação suave
+  const duplicatedServices = [
+    ...services,
+    ...services,
+    ...services,
+    ...services,
+  ];
 
   return (
     <section className="py-24 bg-background relative overflow-hidden">
@@ -223,22 +181,44 @@ export default function ServicesSection() {
         </div>
 
         <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-hidden cursor-grab active:cursor-grabbing select-none px-3"
           onMouseEnter={() => setIsHovered(true)}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={() => {
-            handleMouseUp();
-            setIsHovered(false);
-          }}
+          onMouseLeave={() => setIsHovered(false)}
+          className="relative overflow-hidden"
         >
-          {duplicatedServices.map((service, index) => (
-            <ServiceCard key={`${service.title}-${index}`} service={service} />
-          ))}
+          <div
+            className={`flex gap-6 px-3 infinite-scroll`}
+            style={{
+              animationPlayState: isHovered ? "paused" : "running",
+            }}
+          >
+            {duplicatedServices.map((service, index) => (
+              <ServiceCard
+                key={`${service.title}-${index}`}
+                service={service}
+              />
+            ))}
+          </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .infinite-scroll {
+          animation: scroll 30s linear infinite;
+        }
+
+        @keyframes scroll {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-50%);
+          }
+        }
+
+        .pause-animation {
+          animation-play-state: paused;
+        }
+      `}</style>
     </section>
   );
 }

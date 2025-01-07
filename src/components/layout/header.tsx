@@ -31,11 +31,7 @@ export default function Header() {
         visible ? "opacity-100" : "opacity-0"
       }`}
     >
-      <div
-        className={`px-8 py-4 rounded-b-full transition-all duration-300 ${
-          visible ? "bg-transparent" : "backdrop-blur-md bg-background/50"
-        }`}
-      >
+      <div className={`px-8 py-4 `}>
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

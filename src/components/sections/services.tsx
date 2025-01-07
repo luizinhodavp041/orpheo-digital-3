@@ -162,7 +162,7 @@ export default function ServicesSection() {
     if (!isDragging || !containerRef.current) return;
     e.preventDefault();
     const x = e.pageX - containerRef.current.offsetLeft;
-    const distance = (x - startX) * 2;
+    const distance = (x - startX) * 1;
     containerRef.current.scrollLeft = scrollLeft - distance;
   };
 

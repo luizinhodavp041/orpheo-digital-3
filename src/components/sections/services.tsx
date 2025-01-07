@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -11,8 +11,6 @@ import {
   Paintbrush,
   Cog,
   ArrowUpRight,
-  ArrowLeft,
-  ArrowRight,
 } from "lucide-react";
 
 interface Service {
@@ -86,13 +84,7 @@ const ServiceCard = ({ service }: { service: Service }) => {
   const Icon = service.icon;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.5 }}
-      className="group relative"
-    >
+    <div className="group relative w-80 flex-shrink-0">
       <div className="overflow-hidden rounded-lg bg-background-secondary border border-border group-hover:border-accent/20 transition-colors">
         <div className="relative h-64 bg-gradient-to-br flex items-center justify-center overflow-hidden">
           <div
@@ -148,32 +140,69 @@ const ServiceCard = ({ service }: { service: Service }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
 export default function ServicesSection() {
-  const [currentPage, setCurrentPage] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeft, setScrollLeft] = useState(0);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const pages = [
-    services.slice(0, 4), // Primeira página com 4 cards
-    services.slice(4, 7), // Segunda página com 3 cards
-  ];
+  // Duplica os serviços para criar um efeito infinito
+  const duplicatedServices = [...services, ...services];
 
-  const nextPage = () => {
-    setCurrentPage(1);
+  // Animação automática
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer || isHovered || isDragging) return;
+
+    const scroll = () => {
+      if (scrollContainer) {
+        scrollContainer.scrollLeft += 2; // Aumentei a velocidade de rolagem de 1 para 2
+
+        // Reset scroll position quando chegar ao final
+        if (
+          scrollContainer.scrollLeft >=
+          (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2
+        ) {
+          scrollContainer.scrollLeft = 0;
+        }
+      }
+    };
+
+    const intervalId = setInterval(scroll, 20); // Diminui o intervalo de 30ms para 20ms
+
+    return () => clearInterval(intervalId);
+  }, [isHovered, isDragging]);
+
+  // Handlers para drag manual
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setStartX(e.pageX - scrollRef.current!.offsetLeft);
+    setScrollLeft(scrollRef.current!.scrollLeft);
   };
 
-  const prevPage = () => {
-    setCurrentPage(0);
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX - scrollRef.current!.offsetLeft;
+    const walk = (x - startX) * 2;
+    scrollRef.current!.scrollLeft = scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
   };
 
   return (
-    <section className="py-24 bg-background relative">
+    <section className="py-24 bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-t from-background-secondary/30 to-transparent" />
 
-      <div className="container relative z-10">
-        <div className="text-center space-y-4 mb-16">
+      <div className="relative z-10 overflow-hidden">
+        <div className="text-center space-y-4 mb-16 px-4">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -193,60 +222,21 @@ export default function ServicesSection() {
           </motion.p>
         </div>
 
-        <motion.div
-          className="grid gap-6"
-          style={{
-            gridTemplateColumns:
-              currentPage === 0 ? "repeat(4, 1fr)" : "repeat(3, 1fr)",
+        <div
+          ref={scrollRef}
+          className="flex gap-6 overflow-x-hidden cursor-grab active:cursor-grabbing select-none px-3"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={() => {
+            handleMouseUp();
+            setIsHovered(false);
           }}
-          initial={{ opacity: 1 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
         >
-          {pages[currentPage].map((service) => (
-            <ServiceCard key={service.title} service={service} />
+          {duplicatedServices.map((service, index) => (
+            <ServiceCard key={`${service.title}-${index}`} service={service} />
           ))}
-        </motion.div>
-
-        <div className="flex justify-center items-center mt-8 gap-4">
-          <button
-            onClick={prevPage}
-            disabled={currentPage === 0}
-            className={`p-2 rounded-full ${
-              currentPage === 0
-                ? "bg-accent/5 text-accent/30"
-                : "bg-accent/10 text-accent hover:bg-accent/20"
-            } transition-colors`}
-            aria-label="Previous page"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-
-          <div className="flex gap-2">
-            {[0, 1].map((page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-3 h-3 rounded-full transition-colors ${
-                  currentPage === page ? "bg-accent" : "bg-accent/20"
-                }`}
-                aria-label={`Go to page ${page + 1}`}
-              />
-            ))}
-          </div>
-
-          <button
-            onClick={nextPage}
-            disabled={currentPage === 1}
-            className={`p-2 rounded-full ${
-              currentPage === 1
-                ? "bg-accent/5 text-accent/30"
-                : "bg-accent/10 text-accent hover:bg-accent/20"
-            } transition-colors`}
-            aria-label="Next page"
-          >
-            <ArrowRight className="w-6 h-6" />
-          </button>
         </div>
       </div>
     </section>
